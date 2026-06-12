@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Çocuklar İçin Yapay Zekâ • YAREN Portalı</title>
@@ -135,6 +136,31 @@ body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#eaf0ff,transp
 .picon{width:36px;height:36px;border-radius:50%;border:0;background:#ffffff2a;color:#fff;cursor:pointer;font-size:14px;display:grid;place-items:center}
 .picon:hover{background:#ffffff55}
 .pip .retag{position:absolute;left:9px;bottom:9px;background:#0008;color:#fff;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.dcard{background:linear-gradient(160deg,#1b2566,#101740);border:2px solid #ffffff22;border-radius:18px;padding:14px;cursor:pointer;color:#fff;text-align:left;transition:.2s}
+.dcard:hover{transform:translateY(-4px);border-color:#ffd24d}
+.dcard .em{font-size:30px}.dcard b{display:block;margin:6px 0 4px;font-size:15px}.dcard span{font-size:12px;color:#bcc6ff;line-height:1.4;display:block}
+.dchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.dchip{border:0;border-radius:999px;padding:8px 14px;font-weight:800;cursor:pointer;background:#ffffff18;color:#fff;font-size:13px}
+.dchip.gold{background:linear-gradient(135deg,#ffb347,#ff8a3d);color:#221}
+.animBox{background:radial-gradient(600px 300px at 50% 0%,#1c2a7a,#0a1140);border:2px solid #ffffff22;border-radius:18px;overflow:hidden;margin:10px 0}
+.animBox canvas{width:100%;display:block}
+.animCap{padding:8px 12px;font-size:13px;color:#cfd6ff;background:#00000033;font-weight:700}
+.exlist{margin:10px 0;padding:0;list-style:none}
+.exlist li{margin:7px 0;padding-left:30px;position:relative;line-height:1.55;font-size:15px}
+.exlist li:before{content:'';position:absolute;left:6px;top:7px;width:12px;height:12px;border-radius:50%;background:#7a4dff}
+.exlist li:nth-child(2):before{background:#28a05a}.exlist li:nth-child(3):before{background:#eb7d28}.exlist li:nth-child(4):before{background:#d23c78}
+.kidbox{background:#fff7e0;border:2px solid #ffd24d;border-radius:16px;padding:12px 14px;margin:10px 0;color:#5a4a18;font-size:15px;line-height:1.6}
+.kidbox b{color:#b07c14}
+.warnbox{background:#ffeaea;border:2px solid #e66;border-radius:16px;padding:12px 14px;margin:10px 0;color:#8a3030;font-size:14.5px;line-height:1.55}
+.ytwrap{margin:12px 0;border-radius:16px;overflow:hidden;border:2px solid #ffffff22;background:#000}
+.ytthumb{position:relative;cursor:pointer;display:block;width:100%;padding:0;border:0;background:linear-gradient(135deg,#1a2a8a,#3a1860)}
+.ytthumb img{width:100%;display:block;opacity:.85}
+.ytthumb .yp{position:absolute;inset:0;display:grid;place-items:center}
+.ytthumb .yp i{width:72px;height:72px;border-radius:50%;background:#ff3d3d;display:grid;place-items:center;color:#fff;font-size:26px;font-style:normal;box-shadow:0 10px 30px #000a}
+.ytthumb .yl{position:absolute;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(transparent,#000c);color:#fff;font-weight:800;font-size:13px;text-align:left}
+.ytwrap iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+
 @media(max-width:820px){
  .shell{padding:4px;overflow-x:auto}
  .stage{min-width:920px}
@@ -226,13 +252,148 @@ function act(a){
   if(a.startsWith('game:'))return GAMES[a.slice(5)]();
   if(a.startsWith('lab-'))return LABS[a.slice(4)]();
   if(a.startsWith('fn:'))a=a.slice(3);
-  const fns={home:()=>showPage('home'),explore:()=>showPage('explore'),minds:()=>minds(''),games,events,projects,leader,notes,profile,ai,alg:algorithm,vision:visionLab,visionLab,data:dataGame,dataGame,ethics:ethicsGame,ethicsGame,algorithm,promo:openPromo,bonus,quiz1,faceLab,handLab,poseLab,teachLab,speechLab,simRegression,simAnomaly,simCluster,simClassify,simSort,simPath,simNeuron,simArm};
+
+
+  const fns={home:()=>showPage('home'),explore:()=>showPage('explore'),minds:()=>minds(''),games,events,projects,leader,notes,profile,ai,deep:deepIndex,deepDive,deepIndex,alg:algorithm,vision:visionLab,visionLab,data:dataGame,dataGame,ethics:ethicsGame,ethicsGame,algorithm,promo:openPromo,bonus,quiz1,faceLab,handLab,poseLab,teachLab,speechLab,simRegression,simAnomaly,simCluster,simClassify,simSort,simPath,simNeuron,simArm};
   (fns[a]||(()=>minds('')))();
 }
 
 /* ============ MODAL HELPERS ============ */
-function openM(t,h){stopCam();title.textContent=t;body.innerHTML=h;shade.classList.add('show');body.scrollTop=0}
-function closeM(){stopCam();shade.classList.remove('show')}
+/* ===== KONU KÜTÜPHANESİ: animasyonlu, örnekli derin anlatım ===== */
+const YTID='xYMZtUOcPJY';
+if(window.CanvasRenderingContext2D&&!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(a,b,w,h,r){this.moveTo(a+r,b);this.arcTo(a+w,b,a+w,b+h,r);this.arcTo(a+w,b+h,a,b+h,r);this.arcTo(a,b+h,a,b,r);this.arcTo(a,b,a+w,b,r);this.closePath();return this}}
+function ytB(k){return `<div class="ytwrap"><button class="ytthumb" onclick="ytGo('${k}',this)"><img src="https://i.ytimg.com/vi/${YTID}/hqdefault.jpg" alt="" onerror="this.style.display='none'"><span class="yp"><i>▶</i></span><span class="yl">🎬 YAREN ile Yapay Zekâ Okuryazarlığı — videoyu izle</span></button></div>`}
+function ytGo(k,btn){btn.parentElement.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${YTID}?autoplay=1&rel=0" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>`}
+const DEEP=[
+{em:'🤖',t:'Yapay Zekâ Nedir?',anim:'pipeline',cap:'Veri → Model → Tahmin: YZ böyle çalışır!',yt:1,sim:()=>teachLab(),sl:'🧪 Kendin Eğit',
+ intro:`Yapay zekâ, bilgisayarların bazı işleri insan gibi <b>akıllıca</b> yapmasını sağlayan teknolojidir. Sihir değildir: <b>veri</b> (örnekler), <b>algoritma</b> (adımlar) ve <b>insan emeği</b> ile çalışır. Duygusu, hayali, canı yoktur — ama çok örnek görerek öğrenir! Yukarıdaki animasyonda veriler modele akıyor; model öğrendikçe tahminler çıkıyor.`,
+ ex:['Telefonun yüzünü tanıyıp kilidi açması','Çeviri uygulamasının Türkçeyi İngilizceye çevirmesi','Video uygulamasının sana yeni öneriler sunması','Sesli asistanın "ışığı kapat" komutunu anlaması'],
+ kid:`Yüz tane kedi ve yüz tane köpek resmi gören bir çocuk, zamanla ikisini ayırt etmeyi öğrenir. Yapay zekâ da aynen böyle: <b>çok örnek görerek</b> öğrenir!`,
+ warn:`YZ çok akıllı görünse de her dediği doğru olmayabilir. Önemli bilgileri öğretmenine, kitaplara ve güvenilir kaynaklara sor!`},
+{em:'🗂️',t:'Veri Nedir?',anim:'data',cap:'Resim, ses, yazı, sayı... hepsi YZ için veridir!',yt:0,sim:()=>dataGame(),sl:'🧪 Veri Dedektifi',
+ intro:`Veri, yapay zekânın <b>öğrenmek için kullandığı bilgidir</b>: resim, yazı, ses, video, sayı, ölçüm... YZ'ye elma ile armudu öğretmek için ona birçok elma ve armut resmi gösteririz — işte bu resimler onun verisidir. Kural basit: <b>iyi veri → iyi öğrenme; çöp veri → çöp sonuç!</b>`,
+ ex:['Sınıftaki herkesin boyunu tabloya yazmak','Oyunda aldığın puanların kaydı','Bir kuşun ötüşünün ses kaydı','Hava durumunun günlük sıcaklık ölçümleri'],
+ kid:`Arkadaşının hangi dondurmaları sevdiğini gözlemliyorsun: çikolatalı ✓, çilekli ✓, limonlu ✗. Bu gözlemler senin "verin"dir — yeni bir dondurmayı sevip sevmeyeceğini artık tahmin edebilirsin!`},
+{em:'🪜',t:'Algoritma Nedir?',anim:'algo',cap:'Adım adım kesin tarif — robot harfiyen uygular!',yt:0,sim:()=>mazeGame(),sl:'🧪 Akıllı Labirent',
+ intro:`Algoritma, bir işi yapmak için izlenen <b>adım adım yoldur</b>. Diş fırçalamanın bile algoritması var: fırçayı al → macunu sür → fırçala → çalkala. Bilgisayar tarifi <b>harfiyen</b> uygular; adımların sırası bozulursa sonuç da bozulur! Animasyondaki robot, verdiğin adımları sırayla izliyor.`,
+ ex:['Robota "sağa dön, üç adım yürü, kapıyı aç" demek','Yemek tarifi: malzeme → karıştır → pişir','Navigasyonun "200 m sonra sola dön" adımları'],
+ kid:`Bir arkadaşına gözü kapalıyken kapıya gitmesini tarif et: "iki adım ileri, sola dön..." İşte sen şimdi bir algoritma yazdın!`},
+{em:'🧠',t:'YZ Nasıl Öğrenir? (Model • Eğitim • Tahmin)',anim:'train',cap:'Dene → yanıl → düzelt: hata her turda küçülüyor!',yt:1,sim:()=>simRegression(),sl:'🧪 Tahmin Labı',
+ intro:`YZ üç adımda öğrenir: <b>1) Veri toplanır</b> (örnekler), <b>2) Eğitim</b>: tahmin eder, doğru cevapla karşılaştırır, hatasını azaltır, <b>3) Kullanım</b>: artık yeni örneklere <b>tahmin</b> yapar. Öğrendiği bilgi yapısına <b>MODEL</b> denir. Animasyonda çizgi her turda noktalara biraz daha uyuyor — hata küçülüyor!`,
+ ex:['El yazısı rakamları binlerce örnekten öğrenmek','Boy-yaş verisinden gelecek yılki boyu tahmin etmek','Eski hava verilerinden yarını tahmin etmek'],
+ kid:`Öğretmenin 20 çarpma sorusu verdi: önce birkaçını yanlış yaptın, hatanı gördün, tekrar denedin... Her turda daha iyisin. YZ eğitimi de tam böyledir!`},
+{em:'🎓',t:'Öğrenmenin 3 Yolu',anim:'ml3',cap:'Denetimli • Denetimsiz • Pekiştirmeli — üçü bir arada!',yt:0,sim:()=>simCluster(),sl:'🧪 Kümeleme',
+ intro:`Makine öğrenmesinin üç yolu var: <b>Denetimli</b> — doğru cevaplarla öğrenir ("bu elma, bu muz"). <b>Denetimsiz</b> — kimse söylemeden benzerleri kendi gruplar. <b>Pekiştirmeli</b> — deneme-yanılma ve ödülle öğrenir (doğruda puan, yanlışta ceza). Animasyonda üçünü yan yana izle!`,
+ ex:['Denetimli: öğretmenin etiketli meyve kartları','Denetimsiz: karışık oyuncakları kendin gruplaman','Pekiştirmeli: bisiklete deneye deneye binmen'],
+ kid:`İpucu cebinde dursun: <b>etiket varsa denetimli, yoksa denetimsiz, ödül varsa pekiştirmeli!</b>`},
+{em:'🕸️',t:'Sinir Ağları ve Derin Öğrenme',anim:'neuron',cap:'Sinyaller katman katman ilerliyor: basitten karmaşığa!',yt:0,sim:()=>simNeuron(),sl:'🧪 Yapay Nöron',
+ intro:`Yapay sinir ağı, beyindeki bağlantılardan <b>esinlenen</b> hesaplama yapısıdır: birçok küçük "karar kutusu" birlikte çalışır. Bilgi <b>katman katman</b> işlenir: ilk katman çizgileri, sonraki şekilleri, son katman "Bu bir kedi!" der. Çok katman = <b>derin öğrenme</b>. Animasyonda sinyallerin katmanlar arası yolculuğunu izle!`,
+ ex:['Fotoğraftaki yüzleri tanıma','Konuşmayı yazıya çevirme','Sürücüsüz aracın yolu algılaması'],
+ kid:`Bir resme bakarken önce hatları, sonra göz-kulağı, en sonunda "kedi!" dediğini fark et — senin beynin de katman katman çalışıyor!`},
+{em:'👁️',t:'Bilgisayarla Görme',anim:'vision',cap:'Tarama kutusu nesneleri buluyor: elma %96!',yt:1,sim:()=>visionLab(),sl:'🧪 Canlı Kamera',
+ intro:`Bilgisayarla görme, makinelerin resim ve videolardaki <b>nesneleri tanımaya</b> çalışmasıdır. Model piksellere bakar, öğrendiği desenlerle karşılaştırır ve bulduklarını <b>kutucuklarla</b> gösterir: "elma %96". Ama bazen karıştırabilir — sonucu her zaman kendi gözünle de kontrol et! Animasyonda tarayıcı kutunun nesneleri tek tek bulmasını izle.`,
+ ex:['Fotoğrafta kedi var mı sorusu','Telefonun yüzünü tanıyıp açılması','Sürücüsüz aracın şeritleri görmesi','Röntgende hastalık izi aramada hekime yardım'],
+ kid:`"Resimde saklı nesneyi bul" oyunu gibi: YZ de sahnedeki elmayı, kitabı, kalemi bulup etiketler. Sen de say bakalım: masada kaç nesne var?`},
+{em:'💬',t:'Dil ve Konuşma (NLP & Büyük Dil Modelleri)',anim:'nlp',cap:'Cümle parçalara ayrılıyor, anlam yakalanıyor, cevap yazılıyor!',yt:0,sim:()=>emotionLab(),sl:'🧪 Duygu Analizi',
+ intro:`Doğal dil işleme, bilgisayarın <b>insan dilini anlamasıdır</b>. Cümleni kelimelere böler, ilişkileri yakalar, cevap üretir. <b>Büyük dil modelleri</b>, dev kütüphaneler dolusu metinden öğrenmiş yazı yardımcılarıdır: hikâye yazar, soru cevaplar, özet çıkarır. Animasyonda kelimelerin tek tek "okunup" cevabın yazılışını izle!`,
+ ex:['"Bugün hava nasıl?" deyince asistanın anlaması','Yazım hatalarının otomatik düzeltilmesi','Bir metnin İngilizceye çevrilmesi','Ödev konusunun sade dille açıklatılması'],
+ kid:`Dev bir kütüphanedeki kitaplardan dil öğrenmiş bir yardımcı düşün: iyi soru sorarsan iyi cevap verir. "Bir şey anlat" deme; "10 yaş için, 5 maddeyle anlat" de!`,
+ warn:`Dil modelleri her zaman doğru söylemez: uydurabilir, eski bilgi verebilir. Önemli bilgiyi mutlaka kontrol et!`},
+{em:'🎨',t:'Üretken YZ ve İyi İstem',anim:'gen',cap:'İstem ver, ışıltılardan yepyeni bir eser doğsun!',yt:0,sim:()=>createGame(),sl:'🧪 Yaratıcı Zekâ',
+ intro:`Üretken yapay zekâ <b>yeni içerik üretir</b>: metin, resim, müzik, kod... Ona verdiğin komuta <b>İSTEM</b> (prompt) denir. Kural: ne kadar açık yazarsan o kadar iyi sonuç! "Bir şey çiz" yerine <b>"mavi gökyüzünde uçan kırmızı bir balon çiz"</b> de. Animasyonda istemin ışıltılarla esere dönüşmesini izle!`,
+ ex:['"Uzayda kitap okuyan sevimli robot çiz" → görsel','"Kediyle robotun dostluğunu anlatan kısa hikâye yaz" → metin','"Neşeli bir oyun müziği yap" → melodi'],
+ kid:`Arkadaşından resim isterken ayrıntı verirsin ya — YZ'ye de öyle: kim için, ne kadar, hangi renk, hangi örnek... Usta işi istem böyle yazılır!`,
+ warn:`Üretilen şeyleri kontrol et: yazılar bozuk, ayrıntılar gerçek dışı olabilir. Başkasının eserini izinsiz kopyalamak da doğru değildir (telif hakkı!).`},
+{em:'🚀',t:'Yapay Zekâ Ajanları',anim:'agent',cap:'Gözlemle → Planla → Uygula → Kontrol et: ajan döngüsü!',yt:0,sim:()=>raceGame(),sl:'🧪 Ajanını Eğit',
+ intro:`Ajan, bir <b>hedefe ulaşmak için</b> çevresini gözlemleyen, plan yapan ve adım atan yapay zekâdır. Chatbot yalnızca <b>konuşur</b>; ajan <b>iş yapar</b>: haritayı açar, en kısa yolu bulur, görevi bitirir. Animasyonda ajanın döngüsünü izle: gözlemle → planla → uygula → kontrol et!`,
+ ex:['Takvimde herkese uygun saati bulan yardımcı','Odayı temizlemek için rota planlayan robot süpürge','Eksik konunu bulup etkinlik öneren eğitim uygulaması'],
+ kid:`Hazine arayan oyun kahramanı gibi: haritaya bakar, engelden kaçar, anahtarı bulur, kapıyı açar. Hedefe ulaşmak için karar veren herkes biraz "ajan"dır!`},
+{em:'⚠️',t:'YZ Hata Yapar: Halüsinasyon & Önyargı',anim:'bias',cap:'Hep kırmızı elma gören model, yeşil elmayı tanımadı!',yt:1,sim:()=>ethicsGame(),sl:'🧪 Etik Dedektifi',
+ intro:`Yapay zekâ bazen bilmediğini biliyormuş gibi söyler — buna <b>halüsinasyon</b> denir (uydurma kitap, yanlış tarih...). Bazen de eksik/dengesiz veriden <b>önyargılı</b> sonuç çıkarır. Animasyondaki model hep kırmızı elma gördüğü için yeşil elmaya "elma değil!" diyor. Çare: <b>çeşitli ve dengeli örnekler</b> + senin kontrolün!`,
+ ex:['Olmayan bir kitabı varmış gibi anlatması','Bir tarihi yanlış vermesi','Sadece belirli yüzlerle eğitilen modelin başka yüzleri tanıyamaması'],
+ kid:`Kontrol listeni ezbere bil: <b>Kaynak ne? Kanıt ne? Kim doğruluyor?</b> Çok şaşırtıcı bilgiye hemen inanma; öğretmenine ve güvenilir kitaplara sor!`},
+{em:'🛡️',t:'Güvenli ve Sorumlu YZ',anim:'safe',cap:'Altın kurallar tek tek yerine oturuyor ✓',yt:0,sim:()=>ethicsGame(),sl:'🧪 Etik Dedektifi',
+ intro:`Yapay zekâyı güvenle kullanmanın altın kuralları var: <b>kişisel bilgini yazma</b> (ad, adres, okul, şifre), her cevaba hemen inanma, kötü bir içerik görürsen <b>bir yetişkine söyle</b>, YZ'yi kopya için değil <b>öğrenmek için</b> kullan, başkalarının emeğine saygı duy. Unutma: YZ yardımcıdır; <b>patron senin aklın, vicdanın ve öğretmenindir!</b>`,
+ ex:['Şifreni ve adresini asla yazma','Şüpheli videoyu paylaşmadan önce doğrula (deepfake olabilir!)','İnternette bıraktığın her iz kalıcı olabilir — dikkatli paylaş'],
+ kid:`Bu sayfayı bir arkadaşına anlat: kuralları öğretmek, öğrenmenin en güçlü yoludur. Artık sen de bir YZ okuryazarısın!`},
+];
+let _dRaf=0,_dT0=0;
+function stopAnim(){if(_dRaf){cancelAnimationFrame(_dRaf);_dRaf=0}}
+function startAnim(kind){stopAnim();const c=document.getElementById('dAnim');if(!c)return;const x=c.getContext('2d');c.width=680;c.height=300;_dT0=performance.now();
+ const W=680,H=300;function fr(now){const t=(now-_dT0)/1000;x.clearRect(0,0,W,H);ANIMS[kind](x,t,W,H);_dRaf=requestAnimationFrame(fr)}_dRaf=requestAnimationFrame(fr)}
+function rr(x,a,b,w,h,r,fill,stroke){x.beginPath();x.roundRect(a,b,w,h,r);if(fill){x.fillStyle=fill;x.fill()}if(stroke){x.strokeStyle=stroke;x.lineWidth=3;x.stroke()}}
+function txt(x,s,a,b,size,col,bold,al){x.fillStyle=col||'#fff';x.font=(bold?'900 ':'700 ')+(size||16)+'px Nunito,Arial';x.textAlign=al||'center';x.fillText(s,a,b)}
+const ANIMS={
+pipeline(x,t,W,H){const items=['📷','🔊','📝','🔢'];rr(x,W/2-90,H/2-55,180,110,20,'#222a6e','#7a8cff');txt(x,'MODEL',W/2,H/2-14,20,'#ffd24d',1);txt(x,'🧠',W/2,H/2+30,34);
+ items.forEach((e,i)=>{const ph=((t*0.45+i*0.25)%1);const px=40+ph*(W/2-150);txt(x,e,px,70+i*55,26)});
+ const op=((t*0.45)%1);const qx=W/2+110+op*(W/2-180);x.globalAlpha=1-op*0.3;txt(x,'✓ TAHMİN',qx,H/2+6,18,'#5dff9d',1);x.globalAlpha=1;
+ const p=1+0.04*Math.sin(t*5);x.save();x.translate(W/2,H/2);x.scale(p,p);x.translate(-W/2,-H/2);rr(x,W/2-90,H/2-55,180,110,20,null,'#ffd24d');x.restore()},
+data(x,t,W,H){const em=['🖼️','🎵','📝','🔢','🎬','📊'];x.strokeStyle='#7a8cff';x.lineWidth=4;x.beginPath();x.moveTo(W/2-110,H-110);x.lineTo(W/2+110,H-110);x.lineTo(W/2+34,H-50);x.lineTo(W/2-34,H-50);x.closePath();x.stroke();
+ em.forEach((e,i)=>{const ph=((t*0.4+i/em.length)%1);const px=W/2-150+((i*97)%300);const py=20+ph*(H-150);x.globalAlpha=ph<0.92?1:0;txt(x,e,px,py,24);x.globalAlpha=1});
+ txt(x,'VERİ HAVUZU',W/2,H-20,16,'#ffd24d',1);txt(x,'Toplanan: '+(Math.floor(t*2)%100),W/2+170,H-66,15,'#9fe8ff',1)},
+algo(x,t,W,H){const steps=['1','2','3','4','5'];const bw=86,gap=24,x0=(W-(bw*5+gap*4))/2;const cur=Math.floor(t*1.2)%5;
+ steps.forEach((s,i)=>{const on=i===cur;rr(x,x0+i*(bw+gap),H/2-40,bw,80,14,on?'#ffd24d':'#222a6e',on?'#fff':'#5566cc');txt(x,s,x0+i*(bw+gap)+bw/2,H/2+10,30,on?'#1a1a40':'#aab4ff',1);
+ if(i<4){txt(x,'➜',x0+i*(bw+gap)+bw+gap/2,H/2+8,18,'#7a8cff')}});
+ const hop=Math.abs(Math.sin(t*3.8))*16;txt(x,'🤖',x0+cur*(bw+gap)+bw/2,H/2-58-hop,30);
+ txt(x,'Adım adım: sıra çok önemli!',W/2,H-22,16,'#cfd6ff',1)},
+train(x,t,W,H){const pts=[[60,210],[150,190],[230,150],[330,140],[430,100],[540,80],[620,60]];
+ pts.forEach(p=>{x.fillStyle='#9fe8ff';x.beginPath();x.arc(p[0],p[1],7,0,7);x.fill()});
+ const k=Math.min(1,(t%6)/4);const m0=-0.05,m1=-0.27,b0=160,b1=235;const m=m0+(m1-m0)*k,b=b0+(b1-b0)*k;
+ x.strokeStyle='#ffd24d';x.lineWidth=5;x.beginPath();x.moveTo(30,m*30+b);x.lineTo(W-30,m*(W-30)+b);x.stroke();
+ const err=Math.round(40*(1-k))+3;txt(x,'EĞİTİM TURU: '+(Math.floor((t%6)/0.5)+1),120,40,16,'#cfd6ff',1,'left');txt(x,'HATA: '+err,W-60,40,18,err<10?'#5dff9d':'#ff9d9d',1)},
+ml3(x,t,W,H){const cw=200,x1=30,x2=240,x3=450;
+ rr(x,x1,30,cw,H-60,16,'#1c2566','#4a5acc');rr(x,x2,30,cw,H-60,16,'#1c2566','#4a5acc');rr(x,x3,30,cw,H-60,16,'#1c2566','#4a5acc');
+ txt(x,'DENETİMLİ',x1+cw/2,58,15,'#9fe8ff',1);txt(x,'DENETİMSİZ',x2+cw/2,58,15,'#c9a6ff',1);txt(x,'PEKİŞTİRMELİ',x3+cw/2,58,15,'#ffd24d',1);
+ const fl=Math.sin(t*2)>0;txt(x,'🍎',x1+cw/2,140,40);rr(x,x1+40,165,120,34,10,fl?'#28a05a':'#333d88');txt(x,fl?'= elma ✓':'etiket?',x1+cw/2,188,15,'#fff',1);
+ const cols=['#ff6b9d','#5dd6c8','#ffd24d'];for(let i=0;i<12;i++){const k=Math.min(1,Math.max(0,(t%5)/2.4));const gx=x2+50+(i%3)*50,gy=110+Math.floor(i/3)*38;const sx=x2+30+((i*73)%140),sy=100+((i*47)%120);const px=sx+(gx-sx)*k,py=sy+(gy-sy)*k;x.fillStyle=k>0.6?cols[i%3]:'#8892cc';x.beginPath();x.arc(px,py,8,0,7);x.fill()}
+ const ph=(t*0.5)%1;const bx=x3+30+ph*130;txt(x,'⚽',bx,170,24);txt(x,'🚩',x3+170,168,24);if(ph>0.9)txt(x,'+10 ⭐',x3+cw/2,220,18,'#5dff9d',1)},
+neuron(x,t,W,H){const L=[[80,[90,210]],[260,[60,150,240]],[440,[90,210]],[600,[150]]];
+ for(let i=0;i<3;i++)L[i][1].forEach(y1=>L[i+1][1].forEach(y2=>{x.strokeStyle='#3a4699';x.lineWidth=2;x.beginPath();x.moveTo(L[i][0],y1);x.lineTo(L[i+1][0],y2);x.stroke()}));
+ const ph=(t*0.7)%3;const seg=Math.floor(ph),k=ph-seg;
+ if(seg<3)L[seg][1].forEach(y1=>L[seg+1][1].forEach(y2=>{const px=L[seg][0]+(L[seg+1][0]-L[seg][0])*k,py=y1+(y2-y1)*k;x.fillStyle='#5dff9d';x.beginPath();x.arc(px,py,5,0,7);x.fill()}));
+ L.forEach((l,i)=>l[1].forEach(y1=>{x.fillStyle=['#7a8cff','#9fe8ff','#c9a6ff','#ffd24d'][i];x.beginPath();x.arc(l[0],y1,16,0,7);x.fill()}));
+ if(ph>2.7)txt(x,'KEDİ! 🐱',600,110,20,'#5dff9d',1);txt(x,'girdi',80,260,13,'#8ea0ff');txt(x,'katman 1',260,285,13,'#8ea0ff');txt(x,'katman 2',440,260,13,'#8ea0ff');txt(x,'çıktı',600,205,13,'#8ea0ff')},
+nlp(x,t,W,H){x.font='900 17px Nunito,Arial';const tok=['Bugün','hava','nasıl','?'];let bx=60;
+ tok.forEach((s,i)=>{const on=Math.floor(t*1.6)%6===i;const w=x.measureText(s).width+34;rr(x,bx,60,w+14,40,12,on?'#ffd24d':'#222a6e',on?'#fff':'#4a5acc');txt(x,s,bx+(w+14)/2,87,17,on?'#1a1a40':'#cfd6ff',1);bx+=w+26});
+ txt(x,'🤖',90,200,34);const rep='Bugün güneşli, 24 derece! ☀️';const n=Math.min(rep.length,Math.max(0,Math.floor((t%6-2.2)*14)));
+ rr(x,130,170,440,56,14,'#fff');txt(x,rep.slice(0,n),150,205,17,'#222a6e',1,'left');
+ txt(x,'kelimeler tek tek okunur → anlam → cevap',W/2,270,14,'#9fb0ff',1)},
+vision(x,t,W,H){const obj=[['🍎',140,170],['📚',300,200],['✏️',440,160],['🦖',560,200]];obj.forEach(o=>txt(x,o[0],o[1],o[2],40));
+ const i=Math.floor(t*0.8)%4;const o=obj[i];const k=(t*0.8)%1;const bx=o[1]-46,by=o[2]-58;
+ x.strokeStyle='#00f5ff';x.lineWidth=4;x.setLineDash(k<0.5?[10,8]:[]);x.strokeRect(bx,by,92,86);x.setLineDash([]);
+ if(k>0.45){rr(x,bx,by-30,118,26,8,'#00f5ff');txt(x,['elma %96','kitap %93','kalem %91','oyuncak %88'][i],bx+59,by-11,14,'#04223a',1)}
+ txt(x,'tarayıcı kutu nesneleri buluyor...',W/2,40,15,'#9fe8ff',1)},
+gen(x,t,W,H){rr(x,40,40,250,60,14,'#222a6e','#7a4dff');txt(x,'"uzaylı robot çiz"',165,78,16,'#cfd6ff',1);
+ for(let i=0;i<26;i++){const a=i*1.3+t*1.6;const r=120*(1-((t*0.5+i/26)%1));const px=470+Math.cos(a)*r,py=160+Math.sin(a)*r*0.7;x.fillStyle=['#ffd24d','#9fe8ff','#ff9de2'][i%3];x.beginPath();x.arc(px,py,3.5,0,7);x.fill()}
+ const k=Math.min(1,(t%5)/2.5);x.globalAlpha=k;txt(x,'🤖📖',470,178,56);x.globalAlpha=1;
+ txt(x,'➜',330,80,26,'#ffd24d');txt(x,'istem → ışıltılar → yepyeni eser!',W/2,270,15,'#cfd6ff',1)},
+agent(x,t,W,H){const cx=W/2,cy=H/2,R=92;const lbl=['GÖZLEMLE','PLANLA','UYGULA','KONTROL'];
+ lbl.forEach((s,i)=>{const a=-Math.PI/2+i*Math.PI/2;rr(x,cx+Math.cos(a)*R-58,cy+Math.sin(a)*R*0.78-18,116,36,12,'#222a6e','#5566cc');txt(x,s,cx+Math.cos(a)*R,cy+Math.sin(a)*R*0.78+6,13,'#cfd6ff',1)});
+ const a=-Math.PI/2+t*1.4;x.fillStyle='#5dff9d';x.beginPath();x.arc(cx+Math.cos(a)*R,cy+Math.sin(a)*R*0.78,9,0,7);x.fill();
+ const p=1+0.1*Math.sin(t*4);txt(x,'🎯',cx,cy+12,Math.round(34*p));txt(x,'hedefe ulaşana dek döngü sürer!',cx,H-18,14,'#9fb0ff',1)},
+bias(x,t,W,H){x.strokeStyle='#4a5acc';x.lineWidth=4;x.beginPath();x.moveTo(20,200);x.lineTo(W-20,200);x.stroke();
+ for(let i=0;i<5;i++){const px=((t*90+i*130)%(W+80))-40;const green=i===2;txt(x,green?'🍏':'🍎',px,190,32);
+ if(px>W/2-30&&px<W/2+30){rr(x,W/2-78,90,156,40,12,green?'#a03333':'#1f7a46');txt(x,green?'ELMA DEĞİL ✗':'ELMA ✓',W/2,116,16,'#fff',1)}}
+ rr(x,W/2-44,130,88,52,10,'#222a6e','#7a8cff');txt(x,'🔍',W/2,166,26);
+ txt(x,'Hep kırmızı gören model yeşili tanımadı! Çare: ÇEŞİTLİ örnek.',W/2,260,15,'#ffd24d',1)},
+safe(x,t,W,H){const p=1+0.05*Math.sin(t*3);x.save();x.translate(120,150);x.scale(p,p);x.fillStyle='#1f7a46';x.beginPath();x.moveTo(0,-70);x.lineTo(52,-44);x.lineTo(52,30);x.lineTo(0,72);x.lineTo(-52,30);x.lineTo(-52,-44);x.closePath();x.fill();x.strokeStyle='#5dff9d';x.lineWidth=5;x.stroke();txt(x,'✓',0,18,52,'#fff',1);x.restore();
+ const rules=['Kişisel bilgini yazma','Her cevaba hemen inanma','Kötü içerikte yetişkine söyle','Öğrenmek için kullan'];
+ rules.forEach((r,i)=>{const on=t%6>i*1.2+0.6;x.globalAlpha=on?1:0.25;txt(x,(on?'✓ ':'• ')+r,230,80+i*46,17,on?'#5dff9d':'#8ea0ff',1,'left');x.globalAlpha=1})},
+};
+function deepIndex(){openM('📚 Yapay Zekâ Konu Kütüphanesi',`<p style="font-size:15px;color:#cfd6ff">Her konu: <b>animasyonlu anlatım</b> + somut örnekler + gerçek deney. Bir karta dokun!</p><div class="dgrid">${DEEP.map((d,i)=>`<button class="dcard" onclick="deepDive(${i})"><span class="em">${d.em}</span><b>${d.t}</b><span>${d.cap}</span></button>`).join('')}</div>`)}
+function deepDive(i){const d=DEEP[i];const prev=(i-1+DEEP.length)%DEEP.length,next=(i+1)%DEEP.length;
+ openM(d.em+' '+d.t,`
+ <div class="dchips"><button class="dchip" onclick="deepDive(${prev})">← Önceki</button><button class="dchip gold" onclick="deepIndex()">📚 Tüm Konular (${i+1}/${DEEP.length})</button><button class="dchip" onclick="deepDive(${next})">Sonraki →</button></div>
+ <div class="animBox"><canvas id="dAnim"></canvas><div class="animCap">🎞️ ${d.cap}</div></div>
+ <p style="font-size:15.5px;line-height:1.75">${d.intro}</p>
+ <div class="box"><h3>🔎 Somut Örnekler</h3><ul class="exlist">${d.ex.map(e=>`<li>${e}</li>`).join('')}</ul></div>
+ <div class="kidbox"><b>⭐ Çocuk Örneği:</b> ${d.kid}</div>
+ ${d.warn?`<div class="warnbox"><b>❗ Dikkat:</b> ${d.warn}</div>`:''}
+ ${d.yt?ytB('y'+i):''}
+ <div class="controls"><button class="gameBtn primary" onclick="DEEP[${i}].sim()">${d.sl}</button><button class="gameBtn" onclick="quiz1()">❓ Quiz Çöz</button><button class="gameBtn" onclick="deepDive(${next})">Sonraki Konu →</button></div>`);
+ startAnim(d.anim);if(!deepDive._x){deepDive._x=1;xp(10,'Konu Kâşifi')}}
+function openM(t,h){stopCam();stopAnim();title.textContent=t;body.innerHTML=h;shade.classList.add('show');body.scrollTop=0}
+function closeM(){stopCam();stopAnim();shade.classList.remove('show')}
 document.getElementById('x').onclick=closeM;
 shade.onclick=e=>{if(e.target===shade)closeM()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
@@ -344,7 +505,7 @@ function leader(){let me=st.name||'Can';let list=[['Deniz',5200],['Ece',3900],['
 function notes(){openM('🔔 Bildirimler',`<div class="saved">⭐ Günün görevi: Görselleri analiz eden YZ modelini dene.</div><div class="saved">🎮 Yeni oyun: Akıllı Labirent — algoritma maceran seni bekliyor!</div><div class="saved">🏅 Hedef: 3 yeni rozet kazan. (Şu an: ${st.badges.length} rozet)</div><div class="saved">🎁 Günlük bonusunu almayı unutma!</div>`)}
 function profile(){openM('👤 Profilim',`<div class="lab"><h3>${st.name||'Can_Gelecek'}</h3><div class="controls"><span class="pill">⭐ ${st.xp} XP</span><span class="pill">📈 Seviye ${st.level}</span><span class="pill">🏅 ${st.badges.length} Rozet</span><span class="pill">✅ ${Object.keys(st.done).length} Kâşif</span></div><div class="box"><h3>Rozetlerim</h3><p>${st.badges.length?st.badges.map(b=>'🏅 '+b).join(' &nbsp; '):'Henüz rozet yok. Bölümleri tamamla!'}</p></div><div class="project"><input id="pname" placeholder="Kâşif adını değiştir" value="${(st.name||'').replace(/"/g,'')}"><button class="gameBtn primary" onclick="setName()">Adı Kaydet</button></div><div class="controls"><button class="gameBtn" onclick="cert()">🖨️ Sertifika</button><button class="gameBtn" onclick="reset()">🔄 İlerlemeyi Sıfırla</button></div></div>`)}
 function setName(){let v=document.getElementById('pname').value.trim();if(v){st.name=v;save();msg('Ad kaydedildi: '+v);profile()}}
-function ai(){openM('🤖 Yapay Zekâ Nedir?',`<div class="lab"><h3>Yapay zekâ nasıl çalışır?</h3><p style="font-size:16px;line-height:1.7">Yapay zekâ; verilerden örüntü öğrenen, tahmin yapan ve insana yardımcı olan bilgisayar sistemleridir. Sihirli bir makine değildir; iyi veri, iyi soru ve <b>insan kontrolü</b> gerekir.</p><div class="controls"><button class="gameBtn primary" onclick="showPage('explore')">📖 Detaylı Keşfet</button><button class="gameBtn" onclick="quiz1()">❓ Quiz Çöz</button></div></div>`)}
+function ai(){deepDive(0)}
 function algorithm(){mazeGame()}
 function dataGame(){let cats={'🔬 Bilim':['Mikroskop','DNA','Teleskop'],'🎨 Sanat':['Resim','Heykel','Müzik'],'⚙️ Teknoloji':['Robot','Bilgisayar','Uydu']};let items=[];Object.entries(cats).forEach(([k,v])=>v.forEach(x=>items.push([x,k])));items=shuffle(items);window._dg={cats,items,done:0};openM('🗂️ Veri Sınıflandırma',`<div class="lab"><h3>Kartları doğru rafa yerleştir!</h3><p>YZ verileri kategorilere ayırır. Her kartı doğru kutuya gönder!</p><div id="dgitem" class="box" style="text-align:center;font-size:20px;font-weight:900"></div><div class="grid g3">${Object.keys(cats).map(k=>`<button class="opt" style="text-align:center" onclick="dgPick('${k}')">${k}</button>`).join('')}</div><div class="feedback" id="dgout">👆 Kartı doğru kategoriye gönder.</div></div>`);dgNext()}
 function dgNext(){let d=window._dg;if(d.idx>=d.items.length||d.idx===undefined&&false){}if((d.idx||0)>=d.items.length){document.getElementById('dgitem').textContent='🎉 Bitti!';document.getElementById('dgout').textContent='Tüm kartları sınıflandırdın! İşte YZ böyle çalışır.';return}d.idx=d.idx||0;document.getElementById('dgitem').textContent=d.items[d.idx][0]}
